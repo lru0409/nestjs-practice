@@ -3,11 +3,17 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { Cat } from './interfaces/cat.interface';
 
 @Injectable()
 export class CatsService {
   private readonly cats: Cat[] = [];
+
+  constructor(private configService: ConfigService) {
+    const databaseUrl = this.configService.get<string>('DATABASE_URL');
+    console.log(databaseUrl);
+  }
 
   create(cat: Cat): Cat {
     // name 중복 체크
