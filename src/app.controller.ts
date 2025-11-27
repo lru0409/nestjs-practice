@@ -12,7 +12,7 @@ import { PostService } from './post/post.service';
 import {
   User as UserModel,
   Post as PostModel,
-} from '../generated/prisma/client.js';
+} from '../prisma/generated/client.js';
 
 @Controller()
 export class AppController {
