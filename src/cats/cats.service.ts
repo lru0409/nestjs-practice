@@ -3,19 +3,15 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
+
+import { CreateCatDto, UpdateCatDto } from './dtos/cat.dto';
 import { Cat } from './interfaces/cat.interface';
 
 @Injectable()
 export class CatsService {
   private readonly cats: Cat[] = [];
 
-  constructor(private configService: ConfigService) {
-    const databaseUrl = this.configService.get<string>('DATABASE_URL');
-    console.log(databaseUrl);
-  }
-
-  create(cat: Cat): Cat {
+  create(cat: CreateCatDto): Cat {
     // name 중복 체크
     const exist = this.cats.find((c) => c.name === cat.name);
     if (exist) {
@@ -45,7 +41,7 @@ export class CatsService {
     this.cats.splice(index, 1);
   }
 
-  update(name: string, updateData: Partial<Cat>): Cat {
+  update(name: string, updateData: UpdateCatDto): Cat {
     const cat = this.findOne(name);
 
     // name 중복 검사
