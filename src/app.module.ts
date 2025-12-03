@@ -6,9 +6,8 @@ import { LoggerMiddleware } from './common/middlewares/logger.middleware';
 import { RolesGuard } from './common/guards/roles.guard';
 import { CatsModule } from './modules/cats/cats.module';
 import { UserModule } from './modules/user/user.module';
-import { PostModule } from './modules/post/post.module';
+import { PostModule } from './modules/posts/posts.module';
 import { PrismaModule } from './shared/prisma/prisma.module';
-import { AppController } from './app.controller';
 
 @Module({
   imports: [
@@ -18,7 +17,6 @@ import { AppController } from './app.controller';
     ConfigModule.forRoot(),
     PrismaModule,
   ],
-  controllers: [AppController],
   providers: [
     {
       provide: APP_GUARD,
