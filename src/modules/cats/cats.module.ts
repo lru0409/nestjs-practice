@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
-import { CatsController } from './cats.controller';
-import { CatsService } from './cats.service';
+import { CatsController } from './controllers/cats.controller';
+import { CatsService } from './services/cats.service';
 
 @Module({
   imports: [ConfigModule],

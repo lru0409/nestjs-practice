@@ -7,8 +7,8 @@ import {
   Param,
   Body,
 } from '@nestjs/common';
-import { UserService } from './user/user.service';
-import { PostService } from './post/post.service';
+import { UserService } from './modules/user/services/user.service';
+import { PostService } from './modules/post/services/post.service';
 import {
   User as UserModel,
   Post as PostModel,
