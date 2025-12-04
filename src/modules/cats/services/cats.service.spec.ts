@@ -1,0 +1,89 @@
+import { CatsService } from './cats.service';
+import { ConflictException, NotFoundException } from '@nestjs/common';
+
+describe('CatsService (unit)', () => {
+  let service: CatsService;
+
+  beforeEach(() => {
+    service = new CatsService();
+  });
+
+  describe('create', () => {
+    it('should create a cat', () => {
+      const cat = service.create({ name: 'nabi', age: 2, breed: 'persian' });
+      expect(cat).toEqual({ name: 'nabi', age: 2, breed: 'persian' });
+    });
+
+    it('should throw ConflictException for duplicate name', () => {
+      service.create({ name: 'nabi', age: 2, breed: 'persian' });
+      expect(() =>
+        service.create({ name: 'nabi', age: 3, breed: 'mix' }),
+      ).toThrow(ConflictException);
+    });
+  });
+
+  describe('findAll', () => {
+    it('should return an empty array initially', () => {
+      expect(service.findAll()).toEqual([]);
+    });
+
+    it('should return all created cats', () => {
+      service.create({ name: 'nabi', age: 2, breed: 'persian' });
+      service.create({ name: 'choco', age: 3, breed: 'mix' });
+
+      expect(service.findAll()).toEqual([
+        { name: 'nabi', age: 2, breed: 'persian' },
+        { name: 'choco', age: 3, breed: 'mix' },
+      ]);
+    });
+  });
+
+  describe('findOne', () => {
+    it('should return a cat by name', () => {
+      service.create({ name: 'nabi', age: 2, breed: 'persian' });
+      const cat = service.findOne('nabi');
+
+      expect(cat).toEqual({ name: 'nabi', age: 2, breed: 'persian' });
+    });
+
+    it('should throw NotFoundException if cat does not exist', () => {
+      expect(() => service.findOne('nabi')).toThrow(NotFoundException);
+    });
+  });
+
+  describe('remove', () => {
+    it('should remove the cat', () => {
+      service.create({ name: 'nabi', age: 2, breed: 'persian' });
+      service.remove('nabi');
+
+      expect(service.findAll()).toEqual([]);
+    });
+
+    it('should throw NotFoundException if cat does not exist', () => {
+      expect(() => service.remove('nabi')).toThrow(NotFoundException);
+    });
+  });
+
+  describe('update', () => {
+    it('should update the cat fields', () => {
+      service.create({ name: 'nabi', age: 2, breed: 'persian' });
+      const updated = service.update('nabi', { age: 3, breed: 'mix' });
+
+      expect(updated).toEqual({ name: 'nabi', age: 3, breed: 'mix' });
+    });
+
+    it('should throw NotFoundException if cat does not exist', () => {
+      expect(() => service.update('nabi', { age: 3, breed: 'mix' })).toThrow(
+        NotFoundException,
+      );
+    });
+
+    it('should throw ConflictException when changing name to an existing one', () => {
+      service.create({ name: 'nabi', age: 2, breed: 'persian' });
+      service.create({ name: 'choco', age: 3, breed: 'mix' });
+      expect(() => service.update('nabi', { name: 'choco' })).toThrow(
+        ConflictException,
+      );
+    });
+  });
+});
