@@ -10,6 +10,7 @@ import {
 } from '@nestjs/common';
 
 import { Post as PostModel } from '@/prisma/generated/client';
+import { CreatePostDto } from '../dtos/posts.dto';
 import { PostsService } from '../services/posts.service';
 
 @Controller('posts')
@@ -48,10 +49,8 @@ export class PostsController {
   }
 
   @Post()
-  async createDraft(
-    @Body() postData: { title: string; content?: string; authorEmail: string },
-  ): Promise<PostModel> {
-    const { title, content, authorEmail } = postData;
+  async createDraft(@Body() createPostDto: CreatePostDto): Promise<PostModel> {
+    const { title, content, authorEmail } = createPostDto;
     return this.postService.createPost({
       title,
       content,
