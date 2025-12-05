@@ -39,4 +39,10 @@ export default tseslint.config(
       "@typescript-eslint/no-unsafe-member-access": "off",
     },
   },
+  {
+    files: ["**/*.spec.ts", '**/*.e2e-spec.ts'],
+    rules: {
+      '@typescript-eslint/no-unsafe-argument': 'off',
+    }
+  }
 );
