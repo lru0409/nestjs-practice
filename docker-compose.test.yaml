@@ -1,0 +1,13 @@
+version: '3.8'
+
+services:
+  test-db:
+    image: postgres:17
+    ports:
+      - "5433:5432"
+    environment:
+      POSTGRES_USER: rowoon
+      POSTGRES_PASSWORD: 1234
+      POSTGRES_DB: nestjs-practice-test
+    tmpfs:
+      - /var/lib/postgresql/data
