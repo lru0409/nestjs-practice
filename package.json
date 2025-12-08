@@ -13,14 +13,16 @@
     "start:debug": "nest start --debug --watch",
     "start:prod": "node dist/main",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
+
     "test": "jest",
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config test/jest-e2e.json",
-    "prisma:migrate": "cd prisma && prisma migrate dev",
-    "prisma:generate": "cd prisma && prisma generate",
-    "prisma:studio": "cd prisma && prisma studio"
+
+    "prisma:migrate": "cd src/prisma && prisma migrate dev",
+    "prisma:generate": "cd src/prisma && prisma generate",
+    "prisma:studio": "cd src/prisma && prisma studio"
   },
   "dependencies": {
     "@nestjs/common": "^11.0.1",

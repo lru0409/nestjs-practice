@@ -9,7 +9,7 @@ import {
   HttpCode,
 } from '@nestjs/common';
 
-import { Roles } from '@/src/common/decorators/roles.decorator';
+import { Roles } from '@/common/decorators/roles.decorator';
 import { CreateCatDto, UpdateCatDto } from '../dtos/cat.dto';
 import { CatsService } from '../services/cats.service';
 import { Cat } from '../interfaces/cat.interface';

@@ -15,23 +15,23 @@ import { PostsService } from '../services/posts.service';
 
 @Controller('posts')
 export class PostsController {
-  constructor(private postService: PostsService) {}
+  constructor(private postsService: PostsService) {}
 
   @Get()
   async getPosts(): Promise<PostModel[]> {
-    return this.postService.posts({});
+    return this.postsService.posts({});
   }
 
   @Get('feed')
   async getPublishedPosts(): Promise<PostModel[]> {
-    return this.postService.posts({ where: { published: true } });
+    return this.postsService.posts({ where: { published: true } });
   }
 
   @Get('search/:searchString')
   async getFilteredPosts(
     @Param('searchString') searchString: string,
   ): Promise<PostModel[]> {
-    return this.postService.posts({
+    return this.postsService.posts({
       where: {
         OR: [
           { title: { contains: searchString } },
@@ -45,13 +45,13 @@ export class PostsController {
   async getPostById(
     @Param('id', ParseIntPipe) id: number,
   ): Promise<PostModel | null> {
-    return this.postService.post({ id });
+    return this.postsService.post({ id });
   }
 
   @Post()
   async createDraft(@Body() createPostDto: CreatePostDto): Promise<PostModel> {
     const { title, content, authorEmail } = createPostDto;
-    return this.postService.createPost({
+    return this.postsService.createPost({
       title,
       content,
       author: { connect: { email: authorEmail } },
@@ -60,7 +60,7 @@ export class PostsController {
 
   @Patch(':id/publish')
   async publishPost(@Param('id', ParseIntPipe) id: number): Promise<PostModel> {
-    return this.postService.updatePost({
+    return this.postsService.updatePost({
       where: { id },
       data: { published: true },
     });
@@ -68,6 +68,6 @@ export class PostsController {
 
   @Delete(':id')
   async deletePost(@Param('id', ParseIntPipe) id: number): Promise<PostModel> {
-    return this.postService.deletePost({ id });
+    return this.postsService.deletePost({ id });
   }
 }

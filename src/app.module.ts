@@ -6,17 +6,10 @@ import { LoggerMiddleware } from './common/middlewares/logger.middleware';
 import { RolesGuard } from './common/guards/roles.guard';
 import { CatsModule } from './modules/cats/cats.module';
 import { UserModule } from './modules/user/user.module';
-import { PostModule } from './modules/posts/posts.module';
-import { PrismaModule } from './shared/prisma/prisma.module';
+import { PostsModule } from './modules/posts/posts.module';
 
 @Module({
-  imports: [
-    CatsModule,
-    UserModule,
-    PostModule,
-    ConfigModule.forRoot(),
-    PrismaModule,
-  ],
+  imports: [CatsModule, UserModule, PostsModule, ConfigModule.forRoot()],
   providers: [
     {
       provide: APP_GUARD,
