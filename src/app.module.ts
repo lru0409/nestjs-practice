@@ -4,12 +4,19 @@ import { ConfigModule } from '@nestjs/config';
 
 import { LoggerMiddleware } from './common/middlewares/logger.middleware';
 import { RolesGuard } from './common/guards/roles.guard';
+import { PrismaModule } from './prisma/prisma.module';
 import { CatsModule } from './modules/cats/cats.module';
 import { UserModule } from './modules/user/user.module';
 import { PostsModule } from './modules/posts/posts.module';
 
 @Module({
-  imports: [CatsModule, UserModule, PostsModule, ConfigModule.forRoot()],
+  imports: [
+    PrismaModule,
+    CatsModule,
+    UserModule,
+    PostsModule,
+    ConfigModule.forRoot(),
+  ],
   providers: [
     {
       provide: APP_GUARD,

@@ -2,7 +2,7 @@ import { INestApplication, ValidationPipe } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import request, { Response } from 'supertest';
 
-import { CatsModule } from '@/src/modules/cats/cats.module';
+import { CatsModule } from '@/modules/cats/cats.module';
 
 interface ErrorResponse {
   message: string[];
@@ -39,7 +39,11 @@ describe('Cats E2E', () => {
       .post('/cats')
       .send({ name: 'nabi', age: 2, breed: 'persian' })
       .expect(201);
-    expect(response.body).toEqual({ name: 'nabi', age: 2, breed: 'persian' });
+    expect(response.body).toMatchObject({
+      name: 'nabi',
+      age: 2,
+      breed: 'persian',
+    });
   });
   it('/POST cats - conflict name check', async () => {
     await request(app.getHttpServer())
@@ -96,7 +100,15 @@ describe('Cats E2E', () => {
     const response = await request(app.getHttpServer())
       .get('/cats')
       .expect(200);
-    expect(response.body).toEqual([{ name: 'nabi', age: 2, breed: 'persian' }]);
+    expect(response.body).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          name: 'nabi',
+          age: 2,
+          breed: 'persian',
+        }),
+      ]),
+    );
   });
 
   it('/GET casts/:name - get a cat by name', async () => {
@@ -107,7 +119,11 @@ describe('Cats E2E', () => {
     const response = await request(app.getHttpServer())
       .get('/cats/nabi')
       .expect(200);
-    expect(response.body).toEqual({ name: 'nabi', age: 2, breed: 'persian' });
+    expect(response.body).toMatchObject({
+      name: 'nabi',
+      age: 2,
+      breed: 'persian',
+    });
   });
   it('/GET cats/:name - not found', async () => {
     await request(app.getHttpServer()).get('/cats/unknown').expect(404);

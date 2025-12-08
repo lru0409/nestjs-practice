@@ -23,7 +23,6 @@ export class PrismaExceptionInterceptor implements NestInterceptor {
         if (!(error instanceof Prisma.PrismaClientKnownRequestError)) {
           return throwError(() => error as Error);
         }
-        console.log('prisma error', error);
         switch (error.code as PrismaErrorCode) {
           case PrismaErrorCode.VALUE_TOO_LONG:
           case PrismaErrorCode.FOREIGN_KEY_CONSTRAINT_FAILED:

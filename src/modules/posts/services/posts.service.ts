@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 
 import { PrismaService } from '@/prisma/prisma.service';
 import { Post, Prisma } from '@/prisma/generated/client';
@@ -10,9 +10,13 @@ export class PostsService {
   async post(
     postWhereUniqueInput: Prisma.PostWhereUniqueInput,
   ): Promise<Post | null> {
-    return this.prisma.post.findUnique({
+    const post = await this.prisma.post.findUnique({
       where: postWhereUniqueInput,
     });
+    if (!post) {
+      throw new NotFoundException('Post not found');
+    }
+    return post;
   }
 
   async posts(params: {
