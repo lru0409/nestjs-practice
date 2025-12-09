@@ -11,6 +11,33 @@ services:
       POSTGRES_DB: nestjs-practice
     volumes:
       - postgres_data:/var/lib/postgresql/data
+    networks:
+      - nestjs-practice-network
+  
+  server:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    volumes:
+      - .:/app
+      - /app/node_modules
+      - /app/src/prisma/generated
+    env_file:
+      - .env.docker
+    depends_on:
+      - db
+    networks:
+      - nestjs-practice-network
+    command: >
+      sh -c "
+        yarn run prisma:migrate &&
+        yarn run start:dev
+      "
 
 volumes:
   postgres_data:
+
+networks:
+  nestjs-practice-network:
