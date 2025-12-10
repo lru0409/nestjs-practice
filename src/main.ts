@@ -30,6 +30,10 @@ async function bootstrap() {
     .setTitle('NestJS Practice')
     .setDescription('The NestJS Practice API description')
     .setVersion('1.0')
+    .addGlobalResponse({
+      status: 500,
+      description: 'Internal server error',
+    })
     .build();
   const documentFactory = () => SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('docs', app, documentFactory);

@@ -9,6 +9,8 @@ import {
 } from 'class-validator';
 import { ApiSchema, ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
+import { Cat } from '../interfaces/cat.interface';
+
 @ApiSchema({ description: 'Data required to create a new cat.' })
 export class CreateCatDto {
   @ApiProperty()
@@ -49,4 +51,16 @@ export class UpdateCatDto {
   @IsOptional()
   @IsString({ message: 'breed must be a string' })
   breed?: string;
+}
+
+@ApiSchema({ description: 'Cat response model.' })
+export class CatDto implements Cat {
+  @ApiProperty()
+  name: string;
+
+  @ApiProperty()
+  age: number;
+
+  @ApiProperty()
+  breed: string;
 }

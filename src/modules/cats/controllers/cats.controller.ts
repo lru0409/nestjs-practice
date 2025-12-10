@@ -8,11 +8,18 @@ import {
   Param,
   HttpCode,
 } from '@nestjs/common';
+import {
+  ApiCreatedResponse,
+  ApiConflictResponse,
+  ApiOkResponse,
+  ApiNotFoundResponse,
+  ApiNoContentResponse,
+  ApiBadRequestResponse,
+} from '@nestjs/swagger';
 
 import { Roles } from '@/common/decorators/roles.decorator';
-import { CreateCatDto, UpdateCatDto } from '../dtos/cat.dto';
+import { CreateCatDto, UpdateCatDto, CatDto } from '../dtos/cat.dto';
 import { CatsService } from '../services/cats.service';
-import { Cat } from '../interfaces/cat.interface';
 
 @Controller('cats')
 export class CatsController {
@@ -20,30 +27,59 @@ export class CatsController {
 
   @Post()
   @Roles(['admin'])
-  create(@Body() createCatDto: CreateCatDto) {
+  @ApiCreatedResponse({
+    description: 'The cat has been successfully created.',
+    type: CatDto,
+  })
+  @ApiBadRequestResponse({ description: 'Bad request' })
+  @ApiConflictResponse({ description: 'The cat name already exists.' })
+  create(@Body() createCatDto: CreateCatDto): CatDto {
     return this.catsService.create(createCatDto);
   }
 
   @Get()
-  findAll(): Cat[] {
+  @ApiOkResponse({
+    description: 'The cats have been successfully retrieved.',
+    type: [CatDto],
+  })
+  findAll(): CatDto[] {
     return this.catsService.findAll();
   }
 
   @Get(':name')
-  findOne(@Param('name') name: string) {
+  @ApiOkResponse({
+    description: 'The cat has been successfully retrieved.',
+    type: CatDto,
+  })
+  @ApiNotFoundResponse({ description: 'The cat not found.' })
+  findOne(@Param('name') name: string): CatDto {
     return this.catsService.findOne(name);
   }
 
   @Delete(':name')
   @Roles(['admin'])
   @HttpCode(204)
+  @ApiNoContentResponse({
+    description: 'The cat has been successfully deleted.',
+  })
+  @ApiNotFoundResponse({ description: 'The cat not found.' })
   remove(@Param('name') name: string) {
     this.catsService.remove(name);
   }
 
   @Patch(':name')
   @Roles(['admin'])
-  update(@Param('name') name: string, @Body() updateCatDto: UpdateCatDto) {
+  @ApiOkResponse({
+    description: 'The cat has been successfully updated.',
+    type: CatDto,
+  })
+  @ApiBadRequestResponse({ description: 'Bad request' })
+  @ApiNotFoundResponse({ description: 'The cat not found.' })
+  @ApiConflictResponse({ description: 'The cat name already exists.' })
+  update(
+    @Param('name') name: string,
+    @Body() updateCatDto: UpdateCatDto,
+  ): CatDto {
     return this.catsService.update(name, updateCatDto);
   }
 }

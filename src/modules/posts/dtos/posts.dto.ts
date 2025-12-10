@@ -8,6 +8,8 @@ import {
 } from 'class-validator';
 import { ApiSchema, ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
+import { Post } from '@/prisma/generated/client';
+
 @ApiSchema({ description: 'Data required to create a new post.' })
 export class CreatePostDto {
   @ApiProperty()
@@ -28,4 +30,22 @@ export class CreatePostDto {
   @IsNotEmpty({ message: 'authorEmail is required' })
   @IsEmail({}, { message: 'authorEmail must be a valid email' })
   authorEmail: string;
+}
+
+@ApiSchema({ description: 'Post response model.' })
+export class PostDto implements Post {
+  @ApiProperty()
+  id: number;
+
+  @ApiProperty()
+  title: string;
+
+  @ApiProperty()
+  content: string;
+
+  @ApiProperty()
+  published: boolean;
+
+  @ApiProperty()
+  authorId: number;
 }

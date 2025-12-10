@@ -7,6 +7,7 @@ import {
 } from 'class-validator';
 import { ApiSchema, ApiProperty } from '@nestjs/swagger';
 
+import { User } from '@/prisma/generated/client';
 @ApiSchema({ description: 'Data required to create a new user.' })
 export class CreateUserDto {
   @ApiProperty()
@@ -19,5 +20,17 @@ export class CreateUserDto {
   @ApiProperty()
   @IsNotEmpty({ message: 'email is required' })
   @IsEmail({}, { message: 'email must be a valid email' })
+  email: string;
+}
+
+@ApiSchema({ description: 'User response model.' })
+export class UserDto implements User {
+  @ApiProperty()
+  id: number;
+
+  @ApiProperty()
+  name: string;
+
+  @ApiProperty()
   email: string;
 }
