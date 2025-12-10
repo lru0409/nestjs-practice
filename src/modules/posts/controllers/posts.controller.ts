@@ -28,7 +28,8 @@ export class PostsController {
   @Get()
   @ApiOkResponse({
     description: 'The posts have been successfully retrieved.',
-    type: [PostDto],
+    type: PostDto,
+    isArray: true,
   })
   async getPosts(): Promise<PostModel[]> {
     return this.postsService.posts({});
@@ -37,7 +38,8 @@ export class PostsController {
   @Get('feed')
   @ApiOkResponse({
     description: 'The published posts have been successfully retrieved.',
-    type: [PostDto],
+    type: PostDto,
+    isArray: true,
   })
   async getPublishedPosts(): Promise<PostModel[]> {
     return this.postsService.posts({ where: { published: true } });
@@ -46,7 +48,8 @@ export class PostsController {
   @Get('search/:searchString')
   @ApiOkResponse({
     description: 'The filtered posts have been successfully retrieved.',
-    type: [PostDto],
+    type: PostDto,
+    isArray: true,
   })
   async getFilteredPosts(
     @Param('searchString') searchString: string,

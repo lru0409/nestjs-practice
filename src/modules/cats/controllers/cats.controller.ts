@@ -40,7 +40,8 @@ export class CatsController {
   @Get()
   @ApiOkResponse({
     description: 'The cats have been successfully retrieved.',
-    type: [CatDto],
+    type: CatDto,
+    isArray: true,
   })
   findAll(): CatDto[] {
     return this.catsService.findAll();
