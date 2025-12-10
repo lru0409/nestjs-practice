@@ -9,7 +9,7 @@ import {
 } from 'class-validator';
 import { ApiSchema, ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
-import { Cat } from '../interfaces/cat.interface';
+import { Cat } from '../interfaces/cats.interface';
 
 @ApiSchema({ description: 'Data required to create a new cat.' })
 export class CreateCatDto {

@@ -18,7 +18,7 @@ import {
 } from '@nestjs/swagger';
 
 import { Roles } from '@/common/decorators/roles.decorator';
-import { CreateCatDto, UpdateCatDto, CatDto } from '../dtos/cat.dto';
+import { CreateCatDto, UpdateCatDto, CatDto } from '../dtos/cats.dto';
 import { CatsService } from '../services/cats.service';
 
 @Controller('cats')
