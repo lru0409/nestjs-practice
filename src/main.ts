@@ -1,11 +1,11 @@
 import { NestFactory } from '@nestjs/core';
 import { ValidationPipe } from '@nestjs/common';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
+import { ConfigService } from '@nestjs/config';
 
 import { AppModule } from './app.module';
 import { HttpExceptionFilter } from './common/filters/http-exception.filter';
 import { LoggerInterceptor } from './common/interceptors/logger.interceptor';
-import { TimeoutInterceptor } from './common/interceptors/timeout.interceptor';
 import { PrismaExceptionInterceptor } from './common/interceptors/prisma-exception.interceptor';
 
 async function bootstrap() {
@@ -22,7 +22,6 @@ async function bootstrap() {
 
   app.useGlobalInterceptors(
     new LoggerInterceptor(),
-    new TimeoutInterceptor(),
     new PrismaExceptionInterceptor(),
   );
 
@@ -38,6 +37,11 @@ async function bootstrap() {
   const documentFactory = () => SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('docs', app, documentFactory);
 
-  await app.listen(process.env.PORT ?? 3000);
+  const configService = app.get(ConfigService);
+  const port = configService.get<number>('port');
+  if (!port) {
+    throw new Error('PORT is not defined');
+  }
+  await app.listen(port);
 }
 bootstrap();
