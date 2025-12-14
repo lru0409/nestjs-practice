@@ -40,11 +40,7 @@ export class AppModule {}
 constructor(@Inject(CACHE_MANAGER) private cacheManager: Cache) {}
 ```
 
-<aside>
-
-`Cache`와 `CACHE_MANAGER` 토큰은 `@nestjs/cache-manager`에서 가져온다.
-
-</aside>
+> `Cache`와 `CACHE_MANAGER` 토큰은 `@nestjs/cache-manager`에서 가져온다.
 
 - `Cache` 인스턴스에 있는 `get` 메서드는 캐시에서 항목을 가져오는 데 사용된다. 항목이 캐시에 존재하지 않으면 `null`이 반환된다.
     
@@ -57,13 +53,8 @@ constructor(@Inject(CACHE_MANAGER) private cacheManager: Cache) {}
     ```tsx
     await this.cacheManager.set('key', 'value');
     ```
-    
 
-<aside>
-
-인메모리 캐시 저장소에서는 [구조적 복제 알고리즘](https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API/Structured_clone_algorithm#javascript_types)에서 지원하는 유형의 값만 저장할 수 있다.
-
-</aside>
+> 인메모리 캐시 저장소에서는 [구조적 복제 알고리즘](https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API/Structured_clone_algorithm#javascript_types)에서 지원하는 유형의 값만 저장할 수 있다.
 
 - 특정 키에 대한 TTL(밀리초 단위 만료 시간)을 수동으로 지정할 수 있다.
     
@@ -92,11 +83,7 @@ constructor(@Inject(CACHE_MANAGER) private cacheManager: Cache) {}
 
 ### 자동 캐싱 응답
 
-<aside>
-
-GraphQL 애플리케이션에서 인터셉터는 각 필드 리졸버에 대해 별도로 실행된다. 따라서 인터셉터를 사용해 응답을 캐싱하는 `CacheModule`은 제대로 작동하지 않는다.
-
-</aside>
+> GraphQL 애플리케이션에서 인터셉터는 각 필드 리졸버에 대해 별도로 실행된다. 따라서 인터셉터를 사용해 응답을 캐싱하는 `CacheModule`은 제대로 작동하지 않는다.
 
 자동 캐싱 응답을 활성화하려면 데이터를 캐싱하려는 위치에 `CacheInterceptor`를 연결하기만 하면 된다.
 
@@ -111,11 +98,7 @@ export class AppController {
 }
 ```
 
-<aside>
-
-`GET` 엔드포인트만 캐시 가능하다. 또한 네이티브 응답 객체(`@Res()`)를 주입하는 경로는 캐시 인터셉터를 사용할 수 없다.
-
-</aside>
+> `GET` 엔드포인트만 캐시 가능하다. 또한 네이티브 응답 객체(`@Res()`)를 주입하는 경로는 캐시 인터셉터를 사용할 수 없다.
 
 모든 엔드포인트에 전역적으로 `CacheInterceptor`를 바인딩할 수 있다.
 
@@ -178,11 +161,7 @@ export class AppController {
 }
 ```
 
-<aside>
-
-`@CacheKey()`와 `@CacheTTL()` 데코레이터는 `@nestjs/cache-manager`에서 가져온다.
-
-</aside>
+> `@CacheKey()`와 `@CacheTTL()` 데코레이터는 `@nestjs/cache-manager`에서 가져온다.
 
 - `@CacheKey()`와 `@CacheTTL()` 중 정의되지 않은 설정을 전역적으로 등록된 기본값을 사용한다.
 
