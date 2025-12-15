@@ -1,6 +1,7 @@
 import { Module, NestModule, MiddlewareConsumer } from '@nestjs/common';
 import { APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core';
-import { ConfigModule } from '@nestjs/config';
+import { ConfigModule, ConfigService } from '@nestjs/config';
+import { CacheModule } from '@nestjs/cache-manager';
 
 import { LoggerMiddleware } from './common/middlewares/logger.middleware';
 import { RolesGuard } from './common/guards/roles.guard';
@@ -9,8 +10,10 @@ import { PrismaModule } from './prisma/prisma.module';
 import { CatsModule } from './modules/cats/cats.module';
 import { UserModule } from './modules/user/user.module';
 import { PostsModule } from './modules/posts/posts.module';
+
 import configurationConfig from './config/configuration.config';
 import timeoutConfig from './config/timeout.config';
+import cacheConfig from './config/cache.config';
 
 @Module({
   imports: [
@@ -19,8 +22,16 @@ import timeoutConfig from './config/timeout.config';
     UserModule,
     PostsModule,
     ConfigModule.forRoot({
-      load: [configurationConfig, timeoutConfig],
+      load: [configurationConfig, timeoutConfig, cacheConfig],
       isGlobal: true,
+    }),
+    CacheModule.registerAsync({
+      isGlobal: true,
+      imports: [ConfigModule],
+      useFactory: (configService: ConfigService) => ({
+        ttl: configService.get<number>('cache.ttl'),
+      }),
+      inject: [ConfigService],
     }),
   ],
   providers: [

@@ -8,6 +8,7 @@ import {
   Body,
   ParseIntPipe,
   HttpCode,
+  UseInterceptors,
 } from '@nestjs/common';
 import {
   ApiOkResponse,
@@ -16,6 +17,7 @@ import {
   ApiBadRequestResponse,
   ApiNoContentResponse,
 } from '@nestjs/swagger';
+import { CacheInterceptor, CacheTTL } from '@nestjs/cache-manager';
 
 import { Post as PostModel } from '@/prisma/generated/client';
 import { CreatePostDto, PostDto } from '../dtos/posts.dto';
@@ -26,26 +28,32 @@ export class PostsController {
   constructor(private postsService: PostsService) {}
 
   @Get()
+  @UseInterceptors(CacheInterceptor)
+  @CacheTTL(1000)
   @ApiOkResponse({
     description: 'The posts have been successfully retrieved.',
     type: PostDto,
     isArray: true,
   })
   async getPosts(): Promise<PostModel[]> {
+    console.log('posts getPosts');
     return this.postsService.posts({});
   }
 
   @Get('feed')
+  @UseInterceptors(CacheInterceptor)
   @ApiOkResponse({
     description: 'The published posts have been successfully retrieved.',
     type: PostDto,
     isArray: true,
   })
   async getPublishedPosts(): Promise<PostModel[]> {
+    console.log('posts getPublishedPosts');
     return this.postsService.posts({ where: { published: true } });
   }
 
   @Get('search/:searchString')
+  @UseInterceptors(CacheInterceptor)
   @ApiOkResponse({
     description: 'The filtered posts have been successfully retrieved.',
     type: PostDto,
@@ -54,6 +62,7 @@ export class PostsController {
   async getFilteredPosts(
     @Param('searchString') searchString: string,
   ): Promise<PostModel[]> {
+    console.log('posts getFilteredPosts');
     return this.postsService.posts({
       where: {
         OR: [
