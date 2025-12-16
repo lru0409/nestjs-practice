@@ -3,9 +3,8 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { HttpService } from '@nestjs/axios';
-import { firstValueFrom } from 'rxjs';
 
+import { HttpService } from '@/shared/http/services/http.service';
 import { CreateCatDto, UpdateCatDto } from '../dtos/cats.dto';
 import { Cat, CatImage } from '../interfaces/cats.interface';
 
@@ -14,6 +13,17 @@ export class CatsService {
   private readonly cats: Cat[] = [];
 
   constructor(private readonly httpService: HttpService) {}
+
+  async getRandomImage(): Promise<CatImage> {
+    const response = await this.httpService.get<CatImage[]>(
+      'https://api.thecatapi.com/v1/images/search',
+    );
+    const url = response[0]?.url;
+    if (!url) {
+      throw new NotFoundException('No image found');
+    }
+    return { url };
+  }
 
   create(cat: CreateCatDto): Cat {
     // name 중복 체크
@@ -64,18 +74,5 @@ export class CatsService {
       breed: updateData.breed ?? cat.breed,
     });
     return cat;
-  }
-
-  async getRandomImage(): Promise<CatImage> {
-    const response = await firstValueFrom(
-      this.httpService.get<CatImage[]>(
-        'https://api.thecatapi.com/v1/images/search',
-      ),
-    );
-    const url = response.data[0]?.url;
-    if (!url) {
-      throw new NotFoundException('No image found');
-    }
-    return { url };
   }
 }
