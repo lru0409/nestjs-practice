@@ -3,3 +3,7 @@ export interface Cat {
   age: number;
   breed: string;
 }
+
+export interface CatImage {
+  url: string;
+}

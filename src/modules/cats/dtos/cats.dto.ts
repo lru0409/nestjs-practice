@@ -64,3 +64,9 @@ export class CatDto implements Cat {
   @ApiProperty()
   breed: string;
 }
+
+@ApiSchema({ description: 'Cat image response model.' })
+export class CatImageDto {
+  @ApiProperty()
+  url: string;
+}

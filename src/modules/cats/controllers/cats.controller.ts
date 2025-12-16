@@ -18,12 +18,22 @@ import {
 } from '@nestjs/swagger';
 
 import { Roles } from '@/common/decorators/roles.decorator';
-import { CreateCatDto, UpdateCatDto, CatDto } from '../dtos/cats.dto';
+import {
+  CreateCatDto,
+  UpdateCatDto,
+  CatDto,
+  CatImageDto,
+} from '../dtos/cats.dto';
 import { CatsService } from '../services/cats.service';
 
 @Controller('cats')
 export class CatsController {
   constructor(private catsService: CatsService) {}
+
+  @Get('random-image')
+  getRandomImage(): Promise<CatImageDto> {
+    return this.catsService.getRandomImage();
+  }
 
   @Post()
   @Roles(['admin'])
