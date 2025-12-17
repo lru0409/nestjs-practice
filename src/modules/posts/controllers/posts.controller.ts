@@ -7,7 +7,6 @@ import {
   Param,
   Body,
   ParseIntPipe,
-  HttpCode,
   UseInterceptors,
 } from '@nestjs/common';
 import {

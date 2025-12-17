@@ -2,6 +2,8 @@ import { Module, NestModule, MiddlewareConsumer } from '@nestjs/common';
 import { APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { CacheModule } from '@nestjs/cache-manager';
+import { Keyv } from 'keyv';
+import KeyvRedis from '@keyv/redis';
 
 import { LoggerMiddleware } from './common/middlewares/logger.middleware';
 import { RolesGuard } from './common/guards/roles.guard';
@@ -31,9 +33,18 @@ import httpConfig from './config/http.config';
     CacheModule.registerAsync({
       isGlobal: true,
       imports: [ConfigModule],
-      useFactory: (configService: ConfigService) => ({
-        ttl: configService.get<number>('cache.ttl'),
-      }),
+      useFactory: (configService: ConfigService) => {
+        return {
+          ttl: configService.get<number>('cache.ttl'),
+          stores: [
+            new Keyv({
+              store: new KeyvRedis({
+                url: configService.get<string>('cache.redis.url'),
+              }),
+            }),
+          ],
+        };
+      },
       inject: [ConfigService],
     }),
   ],

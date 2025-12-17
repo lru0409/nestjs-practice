@@ -25,6 +25,7 @@
     "prisma:studio": "cd src/prisma && prisma studio"
   },
   "dependencies": {
+    "@keyv/redis": "^5.1.5",
     "@nestjs/axios": "^4.0.1",
     "@nestjs/cache-manager": "^3.0.1",
     "@nestjs/common": "^11.0.1",
