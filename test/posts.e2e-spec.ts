@@ -2,9 +2,7 @@ import { INestApplication, ValidationPipe } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import request from 'supertest';
 
-import { PrismaModule } from '@/prisma/prisma.module';
-import { PostsModule } from '@/modules/posts/posts.module';
-import { UserModule } from '@/modules/user/user.module';
+import { AppModule } from '@/app.module';
 import { PrismaService } from '@/prisma/prisma.service';
 import { PrismaExceptionInterceptor } from '@/common/interceptors/prisma-exception.interceptor';
 
@@ -18,7 +16,7 @@ describe('Posts E2E', () => {
 
   beforeEach(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
-      imports: [PostsModule, UserModule, PrismaModule],
+      imports: [AppModule],
     }).compile();
 
     app = moduleFixture.createNestApplication();

@@ -2,7 +2,8 @@ import { INestApplication, ValidationPipe } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import request, { Response } from 'supertest';
 
-import { CatsModule } from '@/modules/cats/cats.module';
+import { AppModule } from '@/app.module';
+import { HttpService } from '@/shared/http/services/http.service';
 
 interface ErrorResponse {
   message: string[];
@@ -16,11 +17,17 @@ interface SuccessResponse {
 
 describe('Cats E2E', () => {
   let app: INestApplication;
+  let httpService: { get: jest.Mock };
 
   beforeEach(async () => {
+    httpService = { get: jest.fn() };
+
     const moduleFixture: TestingModule = await Test.createTestingModule({
-      imports: [CatsModule],
-    }).compile();
+      imports: [AppModule],
+    })
+      .overrideProvider(HttpService)
+      .useValue(httpService)
+      .compile();
 
     app = moduleFixture.createNestApplication();
 
@@ -32,6 +39,30 @@ describe('Cats E2E', () => {
 
   afterAll(async () => {
     await app.close();
+  });
+
+  it('/GET cats/random-image - get a random cat image', async () => {
+    httpService.get.mockResolvedValue([
+      {
+        id: 'ams',
+        url: 'https://cdn2.thecatapi.com/images/ams.jpg',
+        width: 500,
+        height: 453,
+      },
+    ]);
+    const response = await request(app.getHttpServer())
+      .get('/cats/random-image')
+      .expect(200);
+    expect(httpService.get).toHaveBeenCalledWith(
+      'https://api.thecatapi.com/v1/images/search',
+    );
+    expect(response.body).toMatchObject({
+      url: 'https://cdn2.thecatapi.com/images/ams.jpg',
+    });
+  });
+  it('/GET cats/random-image - not found', async () => {
+    httpService.get.mockResolvedValue([]);
+    await request(app.getHttpServer()).get('/cats/random-image').expect(404);
   });
 
   it('/POST cats - create a cat', async () => {

@@ -36,7 +36,6 @@ export class PostsController {
     isArray: true,
   })
   async getPosts(): Promise<PostModel[]> {
-    console.log('posts getPosts');
     return this.postsService.posts({});
   }
 
@@ -48,7 +47,6 @@ export class PostsController {
     isArray: true,
   })
   async getPublishedPosts(): Promise<PostModel[]> {
-    console.log('posts getPublishedPosts');
     return this.postsService.posts({ where: { published: true } });
   }
 
@@ -62,7 +60,6 @@ export class PostsController {
   async getFilteredPosts(
     @Param('searchString') searchString: string,
   ): Promise<PostModel[]> {
-    console.log('posts getFilteredPosts');
     return this.postsService.posts({
       where: {
         OR: [
@@ -115,7 +112,6 @@ export class PostsController {
   }
 
   @Delete(':id')
-  @HttpCode(204)
   @ApiNoContentResponse({
     description: 'The post has been successfully deleted.',
   })

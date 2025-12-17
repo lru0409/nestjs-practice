@@ -1,11 +1,53 @@
-import { CatsService } from './cats.service';
 import { ConflictException, NotFoundException } from '@nestjs/common';
+import { Test } from '@nestjs/testing';
+
+import { HttpService } from '@/shared/http/services/http.service';
+import { CatsService } from './cats.service';
 
 describe('CatsService (unit)', () => {
   let service: CatsService;
+  let httpService: { get: jest.Mock };
 
-  beforeEach(() => {
-    service = new CatsService();
+  beforeEach(async () => {
+    httpService = { get: jest.fn() };
+
+    const module = await Test.createTestingModule({
+      providers: [
+        CatsService,
+        {
+          provide: HttpService,
+          useValue: httpService,
+        },
+      ],
+    }).compile();
+
+    service = module.get(CatsService);
+  });
+
+  describe('getRandomImage', () => {
+    it('should return a random cat image', async () => {
+      httpService.get.mockResolvedValue([
+        {
+          id: 'ams',
+          url: 'https://cdn2.thecatapi.com/images/ams.jpg',
+          width: 500,
+          height: 453,
+        },
+      ]);
+
+      const result = await service.getRandomImage();
+      expect(httpService.get).toHaveBeenCalledWith(
+        'https://api.thecatapi.com/v1/images/search',
+      );
+      expect(result).toEqual({
+        url: 'https://cdn2.thecatapi.com/images/ams.jpg',
+      });
+    });
+
+    it('should throw NotFoundException if no image is found', async () => {
+      httpService.get.mockResolvedValue([]);
+      await expect(service.getRandomImage()).rejects.toThrow(NotFoundException);
+    });
   });
 
   describe('create', () => {
