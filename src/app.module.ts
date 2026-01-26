@@ -13,11 +13,13 @@ import { HttpModule } from './shared/http/http.module';
 import { CatsModule } from './modules/cats/cats.module';
 import { UserModule } from './modules/user/user.module';
 import { PostsModule } from './modules/posts/posts.module';
+import { AuthModule } from './modules/auth/auth.module';
 
 import configurationConfig from './config/configuration.config';
 import timeoutConfig from './config/timeout.config';
 import cacheConfig from './config/cache.config';
 import httpConfig from './config/http.config';
+import authenticationConfig from './config/authentication.config';
 
 @Module({
   imports: [
@@ -27,7 +29,13 @@ import httpConfig from './config/http.config';
     UserModule,
     PostsModule,
     ConfigModule.forRoot({
-      load: [configurationConfig, timeoutConfig, cacheConfig, httpConfig],
+      load: [
+        configurationConfig,
+        timeoutConfig,
+        cacheConfig,
+        httpConfig,
+        authenticationConfig,
+      ],
       isGlobal: true,
     }),
     CacheModule.registerAsync({
@@ -47,6 +55,7 @@ import httpConfig from './config/http.config';
       },
       inject: [ConfigService],
     }),
+    AuthModule,
   ],
   providers: [
     {
